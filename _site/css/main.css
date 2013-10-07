@@ -39,7 +39,18 @@ a:visited { color: #a0a; }
     min-height: 333px;
     box-shadow: inset 0 3px 10px rgba(0,0,0,.4);
 }
-
+#social-buttons {
+    min-height: 60px;
+    padding: 22px 0 17px;
+    text-align: center;
+    background-color: #f5f5f5;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ddd;
+}
+#social-buttons li {
+    list-style-type: none;
+    display: inline;
+}
 /*****************************************************************************/
 /*
 /* Main
