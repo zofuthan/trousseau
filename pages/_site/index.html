@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Your New Jekyll Site</title>
+        <meta name="viewport" content="width=device-width">
+
+        <!-- syntax highlighting CSS -->
+        <link rel="stylesheet" href="/css/syntax.css">
+
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="/css/main.css">
+        <link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    </head>
+    <body>
+        <div id="header">
+            <div class="container">
+                <img alt="trousseau, the encrypted keyring"
+                src="/img/trousseau-baneer.jpg"
+                style="align:center;"/>
+            </div>
+        </div>
+        <div class="main">
+            <div class="container">
+                <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <p><h2>What it is</h2>
+
+<p><em>Trousseau</em> is a <strong>gpg</strong> encrypted key-value store file written in Go. It is designed to be easily manipulated and imported/exported on multiple remote storage sources.
+It was built with private keys transportation and sharing across servers in mind. However it could be useful to anyone who needs to store and eventualy share sensitive datas: passwords, banking credentials sensitive personal informations, and so on...
+As of today <em>Trousseau</em> exposes a <strong>push</strong>-<strong>pull</strong> interface to <em>S3</em> and <em>scp</em> storage methods but more are to come (Ftp, Dropbox, GDrive).
+<em>Trousseau</em> is an open source software under the MIT license. Any hackers are welcome to supply ideas, features requests, patches, pull requests and so on: see <strong>Contribute</strong></p>
+
+<div class="section-break"></div>
+
+<h2>Installation</h2>
+
+<div class="subsection-break"></div>
+
+<h3>Binaries</h3>
+
+<p>Precompiled binaries of the project for <em>i386</em>, <em>x86_64</em> and <em>arm</em> architectures (linux and darwin) can be found in the project <em>bin</em> folder.
+Just copy it on your <code>PATH</code> and go ahead with <em>usage</em> instructions.</p>
+
+<div class="subsection-break"></div>
+
+<h3>Build it</h3>
+
+<ol>
+<li>First, make sure you have a <code>Go &lt;http://http://golang.org/&gt;</code> language compiler <strong>&gt;= 1.1.2</strong> (<em>mandatory</em>) and <code>git &lt;http://gitscm.org&gt;</code> installed.</li>
+<li>Then, just build and copy the <code>./bin/trousseau</code> executable to a system <em>PATH</em> location</li>
+</ol>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    make
+    sudo cp ./bin/trousseau /usr/local/bin/trousseau
+</code></pre></div>
+<div class="section-break"></div>
+
+<h2>Usage</h2>
+
+<div class="subsection-break"></div>
+
+<h3>Prerequisities</h3>
+
+<div class="break"></div>
+
+<h4>Gpg password</h4>
+
+<p>Every decryption operations will require your <em>gpg</em> primary key password. As of today, <strong>trousseau</strong> will handle your password through the environment.
+Export your primary key password as <code>TROUSSEAU_PASSWORD</code> environment variable.</p>
+
+<p><em>Example</em>:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="nv">$ </span><span class="nb">export </span><span class="nv">TROUSSEAU_PASSWORD</span><span class="o">=</span>mysupperdupperpassword
+    <span class="nv">$ </span>trousseau get abc
+</code></pre></div>
+<div class="break"></div>
+
+<h4>AWS credentials</h4>
+
+<p>If you intend to use the push/pull feature using <code>S3 &lt;http://http://aws.amazon.com/s3/&gt;</code> service, please make sure to set the
+<code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> variables, like:</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="nv">$ </span><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>myaeccskey <span class="o">&amp;&amp;</span> <span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>mysecretkey
+    <span class="nv">$ </span>trousseau pull
+</code></pre></div>
+<div class="break"></div>
+
+<h4>Environment variables</h4>
+
+<ul>
+<li><code>TROUSSEAU_PASSWORD</code> (<strong>mandatory</strong>): your <em>gpg</em> primary key password that will be used to identify you as one of the trousseau data store recipient and give read/write access.</li>
+<li><code>AWS_ACCESS_KEY_ID</code> and <code>AWS_SECRET_ACCESS_KEY</code> (<em>optional</em>): Your aws account credentials with proper read/write acces over S3. <em>Only if you intend to use the S3 remote storage features</em></li>
+<li><code>TROUSSEAU_S3_BUCKET</code> and <code>TROUSSEAU_S3_FILENAME</code> (<em>optional</em>): The remote s3 bucket the trousseau data should be pushed/pulled from and the expected remote name of the trousseau data store file.</li>
+</ul>
+
+<div class="subsection-break"></div>
+
+<h3>Actions</h3>
+
+<div class="break"></div>
+
+<h4>Store creation and management</h4>
+
+<p>First use of <strong>trousseau</strong> requires the data store to be created. A <strong>trousseau</strong> data store is built and maintained for a list of <em>gpg</em> recipients who will be the only ones able to decrypt and manipulate it (so don&#39;t forget to include yourself ;) )</p>
+
+<div class="break"></div>
+
+<p><em>Api</em></p>
+
+<ul>
+<li><code>create [RECIPIENTS ...]</code> : creates the trousseau encrypted datastore for provided recipients and stores it in <code>$HOME/.trousseau</code></li>
+<li><code>meta</code> : Outputs the store metadata.</li>
+<li><code>add-recipient RECIPIENT</code> : Adds a recipient to the store. The recipient will be able to open and modify the store.</li>
+<li><code>remove-recipient RECIPIENT</code> : Removes a recipient from the store. The recipient will not be able to open or modify the store.</li>
+</ul>
+
+<div class="break"></div>
+
+<p><em>Create the trousseau datastore</em></p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="c"># create a trousseau for two gpg recipients</span>
+    <span class="nv">$ </span>trousseau create 4B7D890,28EA78B
+    trousseau created at <span class="nv">$HOME</span>/.trousseau
+
+
+    <span class="c"># as you can see, trousseau data store consists</span>
+    <span class="c"># in only one encrypted file, in your $HOME</span>
+    <span class="nv">$ </span>cat ~/.trousseau
+    -----BEGIN PGP MESSAGE-----
+    wcBMA5i2a4x3jHQgAQgAGKAZd5UFauGBMkFz7wi4v4aNTGGpDS81drrevo/Tntdz
+    rr+PR/GjUlKZxhvG18mr+FuTV6q2DOK3Z0nROs57PLK9Q3ye40Su/Af1vj+LaN4i
+    AAMK9YVpjKaxz+pciUm8nBDkRxp3CLZ9eA2B+1JBy5HgziHY+7KC/dvaubRv0M0J
+    qzYvshIYU0urVQt7oO4WYVQbJ1N0OXV3oAzW4bBBs/p6b8KSUlmvHUr+9r4V1KvU
+    ynpHbp1T2HVPC9uqLgJ+PRjlQ2QsxjezkBntOFMaeMZjq2m2glw90aIGDAPjkMKy
+    42qQbmdrT3+houqeKUrLcVFNOxevVEZLf8N3Qgo/H9LgAeSroddqYkJzOmknxDzP
+    MDk+4TaY4Ljge+G7j+CB4iBsIjrgSefl/4ZU30dJ/DHyL5i3lCCGXXAo2eqfJg2w
+    FZgh+qc8Mbjlz2iMdnC+b8rRwhMTgD1Tyd8vbR1ArPfQh3ThdePwrdyE86CYQZOA
+    MIBfKgTUpWiAtEhM23melF8H3oznrIKt1ZtDsxJEuBCZ86XlC9TF27XFWbnl7rfK
+    jF2kqP3DuuBA5d23HprbN6LjDSJeKbXDvc5LetBI7O5y954n3tMWCB9y4EjkpVAx
+    EWnovjEnnW89uXHaFOBQ4naH4kjg1OHEquCf4Nvgl+S5Pfi875yAKqxxK/+e8GGo
+    4q8UZC7ho/cA
+    <span class="o">=</span>t2zr
+    -----END PGP MESSAGE-----
+</code></pre></div>
+<div class="break"></div>
+
+<p><em>Metadata</em></p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="c"># If you take a look at the encrypted content of the</span>
+    <span class="c"># trousseau datastore manually using gpg, you can see</span>
+    <span class="c"># that the created trousseau is not empty </span>
+    <span class="nv">$ </span>cat ~/.trousseau | gpg -d -r 4B7D890 --textmode
+    You need a passphrase to unlock the secret key <span class="k">for</span>
+<span class="k">    </span>user: <span class="s2">&quot;My Gpg User &lt;MyGpg@mail.com&gt;&quot;</span>
+    2048-bit RSA key, ID 4B7D890, created 2013-05-21 <span class="o">(</span>main key ID 4B7D890<span class="o">)</span>
+
+    gpg: encrypted with 2048-bit RSA key, ID 4B7D890, created 2013-05-21
+      <span class="s2">&quot;My Gpg User &lt;MyGpg@mail.com&gt;&quot;</span>
+    <span class="o">{</span><span class="s2">&quot;_meta&quot;</span>:<span class="o">{</span><span class="s2">&quot;created_at&quot;</span>:<span class="s2">&quot;2013-08-12 08:00:20.457477714 +0200 CEST&quot;</span>,<span class="s2">&quot;last_modified_at&quot;</span>:<span class="s2">&quot;2013-08-12 08:00:20.457586991 +0200 CEST&quot;</span>,<span class="s2">&quot;recipients&quot;</span>:<span class="o">[</span><span class="s2">&quot;92EDE36B&quot;</span><span class="o">]</span>,<span class="s2">&quot;version&quot;</span>:<span class="s2">&quot;0.1.0&quot;</span><span class="o">}</span>,<span class="s2">&quot;data&quot;</span>:<span class="o">{}}</span>
+
+
+    <span class="c"># The data attached to the empty trousseau store are</span>
+    <span class="c"># the metadata. Fortunately trousseau exposes a meta</span>
+    <span class="c"># command to output them properly.</span>
+    <span class="nv">$ </span>trousseau meta
+    CreatedAt: 2013-08-12 08:00:20.457477714 +0200 CEST
+    LastModifiedAt: 2013-08-12 08:00:20.457586991 +0200 CEST
+    Recipients: <span class="o">[</span>4B7D890<span class="o">]</span>
+    TrousseauVersion: 0.1.0c
+</code></pre></div>
+<div class="break"></div>
+
+<p><em>Adding and removing recipients</em></p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="c"># Now suppose you&#39;d like another recipient, which</span>
+    <span class="c"># will then be able to open and update the trousseau store</span>
+    <span class="nv">$ </span>trousseau add-recipient 75FE3AB
+    <span class="nv">$ </span>trousseau add-recipient 869FA4A
+    <span class="nv">$ </span>trousseau meta
+    CreatedAt: 2013-08-12 08:00:20.457477714 +0200 CEST
+    LastModifiedAt: 2013-08-12 08:00:20.457586991 +0200 CEST
+    Recipients: <span class="o">[</span>4B7D890, 75FE3AB, 869FA4A<span class="o">]</span>
+    TrousseauVersion: 0.1.0c
+
+
+    <span class="c"># And if you don&#39;t want to give your love anymore to some</span>
+    <span class="c"># of the store recipients, just remove him from the list</span>
+    <span class="nv">$ </span>trousseau remove-recipient 75FE3AB
+    <span class="nv">$ </span>trousseau meta
+    CreatedAt: 2013-08-12 08:00:20.457477714 +0200 CEST
+    LastModifiedAt: 2013-08-12 08:00:20.457586991 +0200 CEST
+    Recipients: <span class="o">[</span>4B7D890, 869FA4A<span class="o">]</span>
+    TrousseauVersion: 0.1.0c
+</code></pre></div>
+<div class="break"></div>
+
+<h4>Getting, setting, deleting, listing keys</h4>
+
+<p>Once your trousseau has been created, you&#39;re now able to read, write, list, delete it&#39;s data and metadata. Here&#39;s how the fun part goes.</p>
+
+<div class="break"></div>
+
+<p><em>Api</em></p>
+
+<ul>
+<li><code>get KEY</code> : Outputs the stored KEY-value pair</li>
+<li><code>set KEY VALUE</code> : Sets the provided key-value pair in store</li>
+<li><code>del KEY</code> : Deletes provided key from the store</li>
+<li><code>keys</code> : Lists the stored keys</li>
+<li><code>show</code> : Lists the stored key-value pairs</li>
+</ul>
+
+<div class="break"></div>
+
+<p><em>Example</em></p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="c"># Right now the store is empty</span>
+    <span class="nv">$ </span>trousseau show
+
+
+    <span class="c"># Let&#39;s add some data into it</span>
+    <span class="nv">$ </span>trousseau <span class="nb">set </span>abc 123
+    <span class="nv">$ </span>trousseau <span class="nb">set</span> <span class="s2">&quot;easy as&quot;</span> <span class="s2">&quot;do re mi&quot;</span>
+    <span class="nv">$ </span>trousseau <span class="nb">set </span>oleiade-private-key <span class="s2">&quot;`cat ~/.ssh/id_rsa`&quot;</span>
+
+
+    <span class="c"># Now let&#39;s make sure data has been added</span>
+    <span class="nv">$ </span>trousseau keys
+    abc
+    easy as
+    oleiade-private-key
+
+    <span class="nv">$ </span>trousseau get abc
+    123
+
+    <span class="nv">$ </span>trousseau show
+    abc: 123
+    easy as: <span class="k">do </span>re mi
+    oleiade-private-key: --- BEGIN PRIVATE KEY ---
+    ...
+
+
+    <span class="c"># Now if you don&#39;t need a key anymore, just drop it.</span>
+    <span class="nv">$ </span>trousseau del abc  <span class="c"># Now the song lacks something doesn&#39;t it?</span>
+</code></pre></div>
+<div class="break"></div>
+
+<h4>Import/Export to remote storage</h4>
+
+<p>Trousseau was built with data remote storage in mind. As of today only S3 storage is available, but more are to come (don&#39;t forget to set your aws credentials environment variables)</p>
+
+<div class="break"></div>
+
+<p><em>Api</em></p>
+
+<ul>
+<li><code>push</code> : Pushes the trousseau data store to remote storage</li>
+<li><code>pull</code> : Pulls the trousseau data store from remote storage</li>
+</ul>
+
+<div class="break"></div>
+
+<p><em>S3 Example</em></p>
+
+<p>Pushing the trousseau data store to Amazon S3 will require some setup:</p>
+
+<ul>
+<li>Make sure to set aws credentials environment variables</li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="nv">$ </span><span class="nb">export </span><span class="nv">AWS_ACCESS_KEY_ID</span><span class="o">=</span>myaeccskey
+    <span class="nv">$ </span><span class="nb">export </span><span class="nv">AWS_SECRET_ACCESS_KEY</span><span class="o">=</span>mysecretkey
+</code></pre></div>
+<ul>
+<li>You can setup the bucket to push data store into and the remote filename using environment. However, you&#39;re also able to provide these parameters as arguments of the <strong>push</strong> and <strong>pull</strong> methods.</li>
+</ul>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="nv">$ </span><span class="nb">export </span><span class="nv">TROUSSEAU_S3_FILENAME</span><span class="o">=</span>trousseau
+    <span class="nv">$ </span><span class="nb">export </span><span class="nv">TROUSSEAU_S3_BUCKET</span><span class="o">=</span>mytrousseaubucket
+</code></pre></div>
+<p>Once you&#39;ve to set it up, you&#39;re ready to properly push the data store to S3.</p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="c"># Considering a non empty trousseau data store</span>
+    <span class="nv">$ </span>trousseau show
+    abc: 123
+    easy as: <span class="k">do </span>re mi
+
+    <span class="c"># And then you&#39;re ready to push</span>
+    <span class="nv">$ </span>trousseau push
+
+
+    <span class="c"># Now that data store is pushed to S3, let&#39;s remove the</span>
+    <span class="c"># local data store and pull it once again to ensure it worked</span>
+    <span class="nv">$ </span>rm ~/.trousseau
+    <span class="nv">$ </span>trousseau show
+    Trousseau unconfigured: no data store
+    <span class="nv">$ </span>trousseau pull
+    <span class="nv">$ </span>trousseau show
+    abc: 123
+    easy as: <span class="k">do </span>re mi
+</code></pre></div>
+<div class="break"></div>
+
+<p><em>Scp example</em></p>
+<div class="highlight"><pre><code class="bash language-bash" data-lang="bash">    <span class="c"># We start with a non empty trousseau data store</span>
+    <span class="nv">$ </span>trousseau show
+    abc: 123
+    easy as: <span class="k">do </span>re mi
+
+    <span class="c"># To push it using scp we need to provide it a couple of</span>
+    <span class="c"># basic options</span>
+    <span class="nv">$ </span>trousseau push --remote-storage scp --host &lt;myhost&gt; --port &lt;myport&gt; --user &lt;myuser&gt;
+
+
+    <span class="c"># Now that data store has been pushed to the remote storage</span>
+    <span class="c"># using scp, let&#39;s remove the local data store and pull it</span>
+    <span class="c"># once again to ensure it worked</span>
+    <span class="nv">$ </span>rm ~/.trousseau
+    <span class="nv">$ </span>trousseau show
+    Trousseau unconfigured: no data store
+    <span class="nv">$ </span>trousseau pull --remote-storage scp --host &lt;myhost&gt; --port &lt;myport&gt; --user &lt;myuser&gt;
+    <span class="nv">$ </span>trousseau show
+    abc: 123
+    easy as: <span class="k">do </span>re mi    
+</code></pre></div>
+<div class="section-break"></div>
+
+<h2>More features to come</h2>
+
+<ul>
+<li>Support for Sftp remote storage</li>
+<li>Support for GDrive remote storage</li>
+<li><p>Support for Dropbox remote storage</p></li>
+<li><p>In a further future I might had support for truecrypt encryption</p></li>
+</ul>
+
+<div class="section-break"></div>
+
+<h2>Contribute</h2>
+
+<ul>
+<li>Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.</li>
+<li>Fork the repository on GitHub to start making your changes to the <strong>master</strong> branch (or branch off of it).</li>
+<li>Write tests which shows that the bug was fixed or that the feature works as expected.</li>
+<li>Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to AUTHORS.</li>
+</ul>
+</p>
+    </div>
+</div>
+
+            </div>
+
+            <div class="footer">
+              <div class="contact">
+                <p>
+                  <a href="http://github.com/oleiade/">github.com/oleiade</a><br />
+                  <a href="http://twitter.com/oleiade/">twitter.com/oleiade</a><br />
+                </p>
+              </div>
+              <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+            </div>
+        </div>
+    </body>
+</html>

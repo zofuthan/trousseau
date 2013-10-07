@@ -1,0 +1,65 @@
+/*****************************************************************************/
+/*
+/* Common
+/*
+/*****************************************************************************/
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html, body { height: 100%; }
+
+body {
+  background-color: #FFF;
+  font-family: 'Lato', sans-serif;
+  text-align: center;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 100%; }
+
+h1 { margin-bottom: 1em; }
+p { margin: 1em 0; }
+
+a         { color: #00a; }
+a:hover   { color: #000; }
+a:visited { color: #a0a; }
+
+
+/*****************************************************************************/
+/*
+/* Header
+/*
+/*****************************************************************************/
+#header {
+    background-color: #E40613;
+    min-height: 333px;
+    box-shadow: inset 0 3px 10px rgba(0,0,0,.4);
+}
+
+/*****************************************************************************/
+/*
+/* Main
+/*
+/*****************************************************************************/
+.main {
+    font-size: 21px;
+    font-weight: 300;
+    line-height: 31.5px;
+    text-align: justify;
+
+    padding-top: 40px;
+    box-shadow: inset 0 3px 10px rgba(0,0,0,.4);
+}
+.main .section-break {
+    min-height: 30px;
+}
+.main .subsection-break {
+    min-height: 15px;
+}
+.main .break {
+    min-height: 10px;
+}
