@@ -103,7 +103,7 @@ func GetCommand() cli.Command {
 func MGetCommand() cli.Command {
 	return cli.Command{
 		Name:   "mget",
-		Usage:  "Batch get comma separated key:value pairs",
+		Usage:  "Batch get comma separated keys",
 		Action: MGetAction,
 	}
 }
