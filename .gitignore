@@ -36,7 +36,8 @@ _testmain.go
 
 
 # Documentation files
-docs/build/
+docs/build
+docs/_build
 
 
 # Intellij
