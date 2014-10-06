@@ -6,8 +6,8 @@
 Welcome to Trousseau's documentation!
 =====================================
 
-What
-----
+Secrets are made to be shared, just not with anyone
+---------------------------------------------------
 
 *Trousseau* is an encrypted key-value store designed to be a *simple*, *safe* and *trustworthy* place for your data.
 
@@ -19,8 +19,8 @@ Create a *trousseau* data store, specify which *opengpg* recipients are allowed 
 
 *Secrets are made to be shared, just not with anyone.* Whether you're an admin, a paranoid guy living in a bunker, or a random user who seeks a simple way to store it's critical data in secured manner. *Trousseau* can do something for you.
 
-Why
----
+You can't thrust post-it, nor stick them on the cloud
+-----------------------------------------------------
 
 Storing, transporting, and sharing sensitive data can be hard, and much more difficult when it comes to automate it.
 
@@ -48,7 +48,7 @@ For the common users
 
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
    getting_started
    configuration
