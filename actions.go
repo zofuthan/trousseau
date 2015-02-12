@@ -52,6 +52,18 @@ func CreateAction(ct CryptoType, ca CryptoAlgorithm, recipients []string) error 
 	return nil
 }
 
+func EncryptionShowAction() error {
+	tr, err := OpenTrousseau(InferStorePath())
+	if err != nil {
+		return err
+	}
+
+	InfoLogger.Printf("type\t%s\n", CryptoTypeMapping[tr.CryptoType])
+	InfoLogger.Printf("algorithm\t%s\n", CryptoAlgorithmMapping[tr.CryptoAlgorithm])
+
+	return nil
+}
+
 func PushAction(destination string, sshPrivateKey string, askPassword bool) error {
 	endpointDsn, err := dsn.Parse(destination)
 	if err != nil {
