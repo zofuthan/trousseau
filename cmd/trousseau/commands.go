@@ -64,6 +64,18 @@ func CreateCommand() cli.Command {
 	}
 }
 
+func EncryptionCommand() cli.Command {
+	return cli.Command{
+		Name:        "encryption",
+		Usage:       "Show or update encryption setup of your data store",
+		Description: "",
+		Subcommands: []cli.Command{
+			EncryptionShowCommand(),
+			EncryptionUpdateCommand(),
+		},
+	}
+}
+
 func PushCommand() cli.Command {
 	return cli.Command{
 		Name:  "push",

@@ -17,6 +17,7 @@ func main() {
 	app.Version = trousseau.TROUSSEAU_VERSION
 	app.Commands = []cli.Command{
 		CreateCommand(),
+		EncryptionCommand(),
 		SetCommand(),
 		GetCommand(),
 		RenameCommand(),
