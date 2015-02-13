@@ -1,10 +1,12 @@
 package trousseau
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"os"
+	"text/tabwriter"
 
 	"github.com/oleiade/serrure/aes"
 	"github.com/oleiade/serrure/openpgp"
@@ -184,8 +186,16 @@ func (t *Trousseau) Write(fp string) error {
 }
 
 func (es *EncryptionSetup) String() string {
-	return fmt.Sprintf(
+	var w *tabwriter.Writer = new(tabwriter.Writer)
+	var b *bytes.Buffer = &bytes.Buffer{}
+
+	w.Init(b, 0, 8, 0, '\t', 0)
+	fmt.Fprintf(
+		w,
 		"type\t%s\nalgorithm\t%s\n",
-		es.Type, es.Algorithm,
+		CryptoTypeMapping[es.Type], CryptoAlgorithmMapping[es.Algorithm],
 	)
+	w.Flush()
+
+	return b.String()
 }

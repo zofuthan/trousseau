@@ -60,8 +60,7 @@ func EncryptionShowAction() error {
 		return err
 	}
 
-	InfoLogger.Printf("type\t%s\n", CryptoTypeMapping[tr.EncryptionSetup.Type])
-	InfoLogger.Printf("algorithm\t%s\n", CryptoAlgorithmMapping[tr.EncryptionSetup.Algorithm])
+	InfoLogger.Print(tr.EncryptionSetup.String())
 
 	return nil
 }
