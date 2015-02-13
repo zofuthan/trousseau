@@ -24,8 +24,8 @@ func TestOpenTrousseau(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	assert(t, tr.CryptoType == ASYMMETRIC_ENCRYPTION, "Wrong encryption type")
-	assert(t, tr.CryptoAlgorithm == GPG_ENCRYPTION, "Wrong encryption algorithm")
+	assert(t, tr.EncryptionSetup.Type == ASYMMETRIC_ENCRYPTION, "Wrong encryption type")
+	assert(t, tr.EncryptionSetup.Algorithm == GPG_ENCRYPTION, "Wrong encryption algorithm")
 	equals(t, tr.Data, []byte("abc"))
 }
 
