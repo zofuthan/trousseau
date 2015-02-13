@@ -10,16 +10,23 @@ import (
 	"github.com/oleiade/serrure/openpgp"
 )
 
+// EncryptionSetup represents a trousseau data store
+// plain encryption setup and options fields.
+// It's attributes are exposed as json fields for
+// easier data store file ummarshaling.
+//
+// For Type field possible values refer to CryptoType type
+// For Algorithm field possible values refer to CryptoAlgorithm type
+type EncryptionSetup struct {
+	Type      CryptoType      `json:"crypto_type"`
+	Algorithm CryptoAlgorithm `json:"crypto_algorithm"`
+}
+
 type Trousseau struct {
-	// Crypto public configuration attributes
-	CryptoType      CryptoType      `json:"crypto_type"`
-	CryptoAlgorithm CryptoAlgorithm `json:"crypto_algorithm"`
+	EncryptionSetup
 
 	// Encrypted data private attribute
 	Data []byte `json:"_data"`
-
-	// Crypto algorithm to decryption
-	cryptoMapping map[CryptoAlgorithm]interface{}
 }
 
 func OpenTrousseau(fp string) (*Trousseau, error) {
@@ -73,7 +80,7 @@ func FromBytes(d []byte) (*Trousseau, error) {
 func (t *Trousseau) Decrypt() (*Store, error) {
 	var store Store
 
-	switch t.CryptoAlgorithm {
+	switch t.EncryptionSetup.Algorithm {
 	case GPG_ENCRYPTION:
 		passphrase, err := GetPassphrase()
 		if err != nil {
@@ -119,7 +126,7 @@ func (t *Trousseau) Decrypt() (*Store, error) {
 }
 
 func (t *Trousseau) Encrypt(store *Store) error {
-	switch t.CryptoAlgorithm {
+	switch t.EncryptionSetup.Algorithm {
 	case GPG_ENCRYPTION:
 		pd, err := json.Marshal(*store)
 		if err != nil {
@@ -174,4 +181,11 @@ func (t *Trousseau) Write(fp string) error {
 	}
 
 	return nil
+}
+
+func (es *EncryptionSetup) String() string {
+	return fmt.Sprintf(
+		"type\t%s\nalgorithm\t%s\n",
+		es.Type, es.Algorithm,
+	)
 }

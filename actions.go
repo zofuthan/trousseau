@@ -23,11 +23,13 @@ func CreateAction(ct CryptoType, ca CryptoAlgorithm, recipients []string) error 
 	store := NewStore(meta)
 
 	tr := Trousseau{
-		CryptoType:      ct,
-		CryptoAlgorithm: ca,
+		EncryptionSetup: EncryptionSetup{
+			Type:      ct,
+			Algorithm: ca,
+		},
 	}
 
-	if tr.CryptoType == SYMMETRIC_ENCRYPTION {
+	if tr.EncryptionSetup.Type == SYMMETRIC_ENCRYPTION {
 		passphrase, err := GetPassphrase()
 		if err != nil {
 
@@ -58,8 +60,8 @@ func EncryptionShowAction() error {
 		return err
 	}
 
-	InfoLogger.Printf("type\t%s\n", CryptoTypeMapping[tr.CryptoType])
-	InfoLogger.Printf("algorithm\t%s\n", CryptoAlgorithmMapping[tr.CryptoAlgorithm])
+	InfoLogger.Printf("type\t%s\n", CryptoTypeMapping[tr.EncryptionSetup.Type])
+	InfoLogger.Printf("algorithm\t%s\n", CryptoAlgorithmMapping[tr.EncryptionSetup.Algorithm])
 
 	return nil
 }
